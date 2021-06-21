@@ -1,0 +1,63 @@
+class ListToSort:
+
+    def __init__(self, array):
+        self.arr = array
+        self.len = len(array)
+
+    def heapify(self, limit, i):
+        """
+        Transforms the heap into the right way (in case if a child is bigger than its parent)
+        :param limit: heap length
+        :param i: index of the last parent which is being checked
+        :return: None
+        """
+        root = i  # Initialize largest as PARENT (because PARENT is bigger then its children in a binary tree (heap))
+        left = 2 * i + 1
+        right = 2 * i + 2
+
+        # See if left child of root exists and is
+        # greater than root
+        if left < limit and self.arr[i] < self.arr[left]:
+            root = left
+
+        # See if right child of root exists and is
+        # greater than root
+        if right < limit and self.arr[root] < self.arr[right]:
+            root = right
+        # if this branch is completed then the right child > the left one.
+        # It means, we have to pass down to until next parent < its left/right child
+
+        # Change root, if needed
+        if root != i:
+            self.arr[i], self.arr[root] = self.arr[root], self.arr[i]
+
+            # Heapify the root if THAT root < children at (i-1)th level (lower)
+            self.heapify(limit, root)
+
+    def heapSort(self):
+        """
+            complexity: O(n * log2(n))  best, average, worst cases
+            --- Heap sort ---
+
+            Insertion Sort is used when :
+
+            - to know just the "smallest" (or largest) of a collection of items, without the overhead of keeping
+             the remaining items in sorted order. For example, a Priority Queue.
+            - to Understand&Use Priority Queue
+            """
+
+        # Reshapes the original tree correctly
+        # Since last parent will be at ((n//2)-1) -> 0 we can start at that location.
+        for i in range(self.len // 2 - 1, -1, -1):
+            self.heapify(self.len, i)
+
+        # One by one extract elements SORTING PART
+        for i in range(self.len - 1, 0, -1):
+            self.arr[i], self.arr[0] = self.arr[0], self.arr[i]
+            self.heapify(i, 0)
+
+
+List0 = ListToSort([5, 1, 0, 7, 3, 8, 3, 9, -5])
+List1 = ListToSort([0,6,1,4,-6,6,2])
+List1.heapSort()
+print(List1.arr)
